@@ -1,24 +1,27 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Tabs } from "expo-router";
+import React from "react";
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
-
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-
+export default function TabLayout() {
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <Tabs screenOptions={{
+      headerShown: false,
+      tabBarActiveTintColor: '#FF6B35',
+      tabBarStyle: { backgroundColor: '#fff', paddingBottom: 6, height: 64 },
+      tabBarLabelStyle: { fontSize: 12, fontWeight: "600" }
+    }}>
+      <Tabs.Screen name="index" options={{
+        title: "Home",
+        tabBarIcon: ({ color, size }) => <Ionicons name="home-sharp" color={color} size={size} />
+      }} />
+      <Tabs.Screen name="workouts" options={{
+        title: "Workouts",
+        tabBarIcon: ({ color, size }) => <MaterialIcons name="fitness-center" color={color} size={size} />
+      }} />
+      <Tabs.Screen name="profile" options={{
+        title: "Profile",
+        tabBarIcon: ({ color, size }) => <Ionicons name="person-circle" color={color} size={size} />
+      }} />
+    </Tabs>
   );
 }
