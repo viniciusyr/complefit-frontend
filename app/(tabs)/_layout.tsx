@@ -1,36 +1,13 @@
+import ProtectedRoute from "@/components/ProtectedRoute";
 import { Tabs } from "expo-router";
-import { Text } from "react-native";
 
-export default function TabLayout() {
+export default function TabsLayout() {
   return (
-    <Tabs
-      screenOptions={{
-        headerShown: false,
-        tabBarActiveTintColor: "#16a34a",
-        tabBarStyle: {
-          backgroundColor: "#111827",
-          borderTopColor: "transparent",
-        },
-      }}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "Início",
-          tabBarIcon: ({ color }) => (
-            <Text style={{ color, fontSize: 18 }}>🏃‍♂️</Text>
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: "Explorar",
-          tabBarIcon: ({ color }) => (
-            <Text style={{ color, fontSize: 18 }}>🔍</Text>
-          ),
-        }}
-      />
-    </Tabs>
+    <ProtectedRoute>
+      <Tabs screenOptions={{ headerShown: false }}>
+        <Tabs.Screen name="index" />
+        <Tabs.Screen name="explore" />
+      </Tabs>
+    </ProtectedRoute>
   );
 }
