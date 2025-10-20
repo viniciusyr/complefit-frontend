@@ -1,7 +1,7 @@
 import { clearTokens, getTokens, saveTokens } from "@/utils/secureStore";
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:8090";
+const API_BASE_URL = "http://localhost:8090/api";
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
@@ -10,9 +10,9 @@ export const api = axios.create({
 
 // Intercepta requests para adicionar token
 api.interceptors.request.use(async (config) => {
-  const token = await getTokens();
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  const tokens = await getTokens();
+  if (tokens?.accessToken) {
+    config.headers.Authorization = `Bearer ${tokens.accessToken}`;
   }
   return config;
 });
@@ -26,14 +26,17 @@ api.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
-      const { refreshToken } = await getTokens();
-      if (!refreshToken) {
+      const tokens = await getTokens();
+      if (!tokens?.refreshToken) {
         await clearTokens();
         return Promise.reject(error);
       }
 
       try {
-        const res = await axios.post(`${API_BASE_URL}/auth/refresh`, { refreshToken });
+        const res = await axios.post(`${API_BASE_URL}/auth/refresh-token`, {
+          refreshToken: tokens.refreshToken,
+        });
+
         await saveTokens(res.data.accessToken, res.data.refreshToken);
 
         // Reenvia a request original com novo token
