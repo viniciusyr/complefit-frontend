@@ -4,12 +4,12 @@ import { saveTokens } from "@/utils/secureStore";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
-    Image,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
-    useWindowDimensions,
+  Image,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
 } from "react-native";
 
 export default function LoginScreen() {
@@ -25,7 +25,7 @@ export default function LoginScreen() {
     try {
       const { accessToken, refreshToken } = await login(email, password);
       await saveTokens(accessToken, refreshToken);
-      router.replace("/(tabs)");
+      router.replace("/(home)");
     } catch (error) {
       console.error("Login failed:", error);
     }
