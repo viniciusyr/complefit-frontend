@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import {Slot, useRouter, useSegments} from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {SafeAreaProvider} from "react-native-safe-area-context";
+import "./globals.css";
 
 export default function RootLayout() {
     const router = useRouter();
@@ -30,5 +32,7 @@ export default function RootLayout() {
 
     if (!isReady) return null;
 
-    return <Slot />;
+    return <SafeAreaProvider>
+        <Slot />
+    </SafeAreaProvider>;
 }
