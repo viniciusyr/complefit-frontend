@@ -1,38 +1,62 @@
-import { useEffect, useState } from "react";
-import {Slot, useRouter, useSegments} from "expo-router";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { useEffect, useState, useRef } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {SafeAreaProvider} from "react-native-safe-area-context";
+import { useRouter, usePathname, Slot } from "expo-router";
+import { View, ActivityIndicator } from "react-native";
 import "./globals.css";
 
 export default function RootLayout() {
+    const [initialized, setInitialized] = useState(false);
     const router = useRouter();
-    const segments = useSegments();
-    const [isReady, setIsReady] = useState(false);
+    const pathname = usePathname();
+    const didRedirectRef = useRef(false); // evita múltiplos redirects
 
     useEffect(() => {
-        async function checkStatus() {
-            const onboardingDone = await AsyncStorage.getItem("onboardingDone");
-            const token = await AsyncStorage.getItem("accessToken");
-            const currentSegment = segments[0];
+        let mounted = true;
 
+        async function checkAuthOnce() {
+            try {
+                const onboardingDone = await AsyncStorage.getItem("onboardingDone");
+                const token = await AsyncStorage.getItem("accessToken");
 
-            if (!onboardingDone && currentSegment !== "onboarding") {
-                router.replace("/onboarding");
-            } else if (onboardingDone && !token && currentSegment !== "login") {
-                router.replace("/login");
-            } else if (token && currentSegment === "login") {
-                router.replace("/");
+                // só executa o redirect uma única vez
+                if (!didRedirectRef.current && mounted) {
+                    didRedirectRef.current = true;
+
+                    if (!onboardingDone) {
+                        if (pathname !== "/onboarding") router.replace("/onboarding");
+                    } else if (!token) {
+                        if (pathname !== "/login") router.replace("/login");
+                    } else {
+                        if (pathname !== "/home" && pathname !== "/") router.replace("/home/home");
+                    }
+                }
+            } catch (e) {
+                console.warn("Error checking auth state", e);
+            } finally {
+                if (mounted) setInitialized(true);
             }
-
-            setIsReady(true);
         }
 
-        checkStatus();
-    }, [segments]);
+        checkAuthOnce();
+        return () => {
+            mounted = false;
+        };
+    }, []); // roda apenas uma vez no mount
 
-    if (!isReady) return null;
+    if (!initialized) {
+        return (
+            <SafeAreaProvider>
+                <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                    <ActivityIndicator size="large" color="#ff5500" />
+                </View>
+            </SafeAreaProvider>
+        );
+    }
 
-    return <SafeAreaProvider>
-        <Slot />
-    </SafeAreaProvider>;
+    return (
+        <SafeAreaProvider>
+            <Slot />
+        </SafeAreaProvider>
+    );
 }
