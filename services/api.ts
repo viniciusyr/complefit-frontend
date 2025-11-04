@@ -2,7 +2,7 @@ import { clearTokens, getTokens, saveTokens } from "@/utils/secureStore";
 import axios from "axios";
 import { Platform } from "react-native";
 
-const LOCAL_IP = "192.168.0.8"; // mesmo IP que testou no Postman (da máquina)
+const LOCAL_IP = "192.168.0.8";
 const PORT = 8090;
 
 const API_BASE_URL =
@@ -15,7 +15,6 @@ export const api = axios.create({
     headers: { "Content-Type": "application/json" },
 });
 
-// Intercepta requests para adicionar token
 api.interceptors.request.use(async (config) => {
     const tokens = await getTokens();
     if (tokens?.accessToken) {
@@ -24,7 +23,6 @@ api.interceptors.request.use(async (config) => {
     return config;
 });
 
-// Intercepta responses para tentar refresh se o token expirou
 api.interceptors.response.use(
     (response) => response,
     async (error) => {

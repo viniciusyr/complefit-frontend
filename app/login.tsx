@@ -71,7 +71,7 @@ export default function LoginScreen() {
                 </TouchableOpacity>
 
                 {/* Link de Registro */}
-                <TouchableOpacity onPress={() => router.push("/register")} className="mt-6">
+                <TouchableOpacity onPress={() => router.push("./register")} className="mt-6">
                     <Text className="text-center text-neutral-400">
                         Não tem conta?{" "}
                         <Text className="text-orange-500 font-semibold">Registrar</Text>

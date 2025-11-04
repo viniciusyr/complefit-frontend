@@ -1,9 +1,9 @@
-import { View, Text, TouchableOpacity, Image } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { LinearGradient } from "expo-linear-gradient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
+import { Image, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
     const router = useRouter();
@@ -66,7 +66,7 @@ export default function HomeScreen() {
                 {/* Botão temporário (exemplo) */}
                 <View className="w-full gap-4">
                     <TouchableOpacity
-                        onPress={() => router.push("/profile")}
+                        onPress={() => router.push("/profile" as any)}
                         className="bg-orange-500 py-4 rounded-2xl"
                     >
                         <Text className="text-center text-white font-semibold text-lg">
