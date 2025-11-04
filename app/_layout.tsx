@@ -1,15 +1,16 @@
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import { useEffect, useState, useRef } from "react";
+import { getTokens } from "@/utils/secureStore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useRouter, usePathname, Slot } from "expo-router";
-import { View, ActivityIndicator } from "react-native";
+import { Slot, usePathname, useRouter } from "expo-router";
+import { useEffect, useRef, useState } from "react";
+import { ActivityIndicator, View } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import "./globals.css";
 
 export default function RootLayout() {
     const [initialized, setInitialized] = useState(false);
     const router = useRouter();
     const pathname = usePathname();
-    const didRedirectRef = useRef(false); // evita múltiplos redirects
+    const didRedirectRef = useRef(false); 
 
     useEffect(() => {
         let mounted = true;
@@ -17,15 +18,14 @@ export default function RootLayout() {
         async function checkAuthOnce() {
             try {
                 const onboardingDone = await AsyncStorage.getItem("onboardingDone");
-                const token = await AsyncStorage.getItem("accessToken");
+                const { accessToken } = await getTokens();
 
-                // só executa o redirect uma única vez
                 if (!didRedirectRef.current && mounted) {
                     didRedirectRef.current = true;
 
                     if (!onboardingDone) {
                         if (pathname !== "/onboarding") router.replace("/onboarding");
-                    } else if (!token) {
+                    } else if (!accessToken) {
                         if (pathname !== "/login") router.replace("/login");
                     } else {
                         if (pathname !== "/home" && pathname !== "/") router.replace("/home/home");
@@ -42,7 +42,7 @@ export default function RootLayout() {
         return () => {
             mounted = false;
         };
-    }, []); // roda apenas uma vez no mount
+    }, []);
 
     if (!initialized) {
         return (

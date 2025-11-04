@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
-import { View, ActivityIndicator } from "react-native";
-import { useRouter } from "expo-router";
+import { getTokens } from "@/utils/secureStore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, View } from "react-native";
 
 export default function Index() {
     const router = useRouter();
@@ -10,12 +11,12 @@ export default function Index() {
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                const token = await AsyncStorage.getItem("accessToken");
+                const { accessToken } = await getTokens();
                 const onboardingDone = await AsyncStorage.getItem("onboardingDone");
 
                 if (!onboardingDone) {
                     router.replace("/onboarding");
-                } else if (token) {
+                } else if (accessToken) {
                     router.replace("/home/home");
                 } else {
                     router.replace("/login");
