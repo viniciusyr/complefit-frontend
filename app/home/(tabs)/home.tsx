@@ -14,7 +14,6 @@ export default function HomeTab() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        // Try stored user object first (legacy)
         const userData = await AsyncStorage.getItem("user");
         if (userData) {
           const parsed = JSON.parse(userData);
@@ -25,7 +24,6 @@ export default function HomeTab() {
           }
         }
 
-        // Try to fetch profile from API (if tokens exist)
         try {
           const res = await api.get("/users/me");
           const u = res.data;
@@ -35,10 +33,8 @@ export default function HomeTab() {
             return;
           }
         } catch {
-          // ignore - profile endpoint may not exist or request may fail when not authenticated
         }
 
-        // Fallback: empty or anonymous label
         setUserName(null);
       } catch (err) {
         console.warn("Failed to load user info:", err);
