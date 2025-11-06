@@ -5,7 +5,7 @@ This file contains the essential, discoverable facts that help an AI agent be im
 
 - Project type: Expo React Native app (TypeScript) using expo-router (file-based routing) and nativewind for styling.
 - Project style: functional components with hooks, Tailwind CSS via nativewind, modular services and contexts. This is a Workout app where both Students and Trainers can use to manage their workouts and sessions. The style should be like Strava or Nike Training Club.
-- Backend: REST API (not in this repo) with auth endpoints under `/auth` and user management under `/users` and `/trainers`. Sample: `POST api/auth/login`, `POST api/users/register`, `POST api/trainers`.
+- Backend: The endpoints called by this app are RESTful and can be found in openapi/openapi.json.
 - Entry points: `App.tsx` (expo dev client + router entry) and the `app/` directory (routes).
 - Package scripts: use `npm install`, `npx expo start` (or `npm run start`), `npm run android|ios|web`. Linting: `npm run lint`.
 
