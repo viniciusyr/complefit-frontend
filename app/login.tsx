@@ -19,7 +19,7 @@ export default function LoginScreen() {
         try {
             const data = await login(email, password);
             await saveTokens(data.accessToken, data.refreshToken);
-            router.replace("/home/home");
+            router.replace("/home");
         }  catch (err: any) {
             const message = handleApiError(err);
             Alert.alert("Erro", message);

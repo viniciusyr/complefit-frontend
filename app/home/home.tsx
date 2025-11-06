@@ -17,7 +17,7 @@ export default function HomeScreen() {
                 const userData = await AsyncStorage.getItem("user");
                 if (userData) {
                     const parsed = JSON.parse(userData);
-                    const name = parsed?.name || parsed?.firstName || parsed?.first_name || parsed?.user?.name;
+                    const name = parsed?.firstName;
                     if (name) {
                         setUserName(name);
                         return;
@@ -27,7 +27,7 @@ export default function HomeScreen() {
                 try {
                     const res = await api.get("/users/me");
                     const u = res.data;
-                    const name = u?.name || u?.firstName || u?.first_name || u?.user?.name;
+                    const name = u?.firstName;
                     if (name) {
                         setUserName(name);
                         return;
@@ -66,8 +66,8 @@ export default function HomeScreen() {
                     {/* Top header */}
                     <View className="flex-row justify-between items-center mb-6">
                         <View>
-                            <Text className="text-gray-400 text-sm">Olá, {userName}</Text>
-                            <Text className="text-white text-2xl font-bold">{userName ? `Olá, ${userName.split(' ')[0]}` : 'Bem-vindo'}</Text>
+                            <Text className="text-gray-400 text-sm">Olá, {userName ? userName.split(' ')[0] : 'Visitante'}</Text>
+                            <Text className="text-white text-2xl font-bold">DateTime</Text>
                         </View>
                         <TouchableOpacity onPress={handleLogout} className="w-12 h-12 rounded-full bg-neutral-900 items-center justify-center">
                             <Text className="text-orange-500 font-semibold">Sair</Text>
