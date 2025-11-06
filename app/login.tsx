@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { View, TextInput, Text, Alert, TouchableOpacity } from "react-native";
-import { useRouter } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { handleApiError } from "@/services/apiErrorHandler";
 import { login } from "@/services/authService";
+import { saveTokens } from "@/utils/secureStore";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import { Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {handleApiError} from "@/services/apiErrorHandler";
 
 export default function LoginScreen() {
     const router = useRouter();
@@ -18,9 +18,8 @@ export default function LoginScreen() {
 
         try {
             const data = await login(email, password);
-            await AsyncStorage.setItem("accessToken", data.accessToken);
-            await AsyncStorage.setItem("refreshToken", data.refreshToken);
-            router.replace("/");
+            await saveTokens(data.accessToken, data.refreshToken);
+            router.replace("/home");
         }  catch (err: any) {
             const message = handleApiError(err);
             Alert.alert("Erro", message);
